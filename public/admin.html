@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍦 Ice Cream Paradise - Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🍦 Ice Cream Paradise</h1>
+            <p class="tagline">Admin Panel</p>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">📋 Menu</a>
+            <a href="kitchen.html">👨‍🍳 Kitchen</a>
+        </nav>
+    </header>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Admin Dashboard</h1>
+            <p>Manage your ice cream business with ease</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h2 id="total-orders">0</h2>
+                <p>Total Orders</p>
+            </div>
+            <div class="stat-card">
+                <h2 id="pending-orders">0</h2>
+                <p>Pending Orders</p>
+            </div>
+            <div class="stat-card">
+                <h2 id="completed-orders">0</h2>
+                <p>Completed Orders</p>
+            </div>
+            <div class="stat-card">
+                <h2 id="total-revenue">₹0</h2>
+                <p>Total Revenue</p>
+            </div>
+        </div>
+        
+        <div class="admin-tabs">
+            <button class="admin-tab active" onclick="showAdminSection('orders', event)">📋 Orders</button>
+            <button class="admin-tab" onclick="showAdminSection('add-menu', event)">➕ Add Menu Item</button>
+            <button class="admin-tab" onclick="showAdminSection('view-menu', event)">📋 View Menu</button>
+            <button class="export-btn" onclick="exportOrdersToCSV()">📊 Export to Sheet</button>
+        </div>
+        
+        <!-- Orders Section -->
+        <div class="admin-section active" id="orders-section">
+            <div class="orders-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Table</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-list">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 50px;">Loading orders...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Add Menu Section -->
+        <div class="admin-section" id="add-menu-section">
+            <div class="form-card">
+                <h3>Add New Menu Item</h3>
+                <form id="add-menu-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Item Name</label>
+                            <input type="text" id="menu-name" required placeholder="e.g., Chocolate Cone">
+                        </div>
+                        <div class="form-group">
+                            <label>Price (₹)</label>
+                            <input type="number" id="menu-price" required placeholder="e.g., 60" min="1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="menu-category" required>
+                                <option value="">Select Category</option>
+                                <option value="Classic">Classic Ice Creams</option>
+                                <option value="Sundaes">Sundaes</option>
+                                <option value="Kulfi">Kulfi</option>
+                                <option value="Cones">Ice Cream Cones</option>
+                                <option value="Special">Special Ice Creams</option>
+                                <option value="Shakes">Ice Cream Shakes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="url" id="menu-image" placeholder="https://example.com/image.jpg">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="menu-desc" rows="3" placeholder="Describe the item..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Add Item</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- View Menu Section -->
+        <div class="admin-section" id="view-menu-section">
+            <div class="menu-list" id="menu-list">
+                <p class="no-orders">Loading menu items...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000';
+        
+        function showAdminSection(section, evt) {
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(`${section}-section`).classList.add('active');
+            if (evt && evt.target) {
+                evt.target.classList.add('active');
+            }
+            
+            if (section === 'orders') loadOrders();
+            if (section === 'view-menu') loadMenu();
+        }
+        
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_URL}/order`);
+                const orders = await response.json();
+                
+                const ordersList = document.getElementById('orders-list');
+                const pendingOrders = document.getElementById('pending-orders');
+                const completedOrders = document.getElementById('completed-orders');
+                const totalRevenue = document.getElementById('total-revenue');
+                
+                let pending = 0, completed = 0, revenue = 0;
+                
+                if (orders.length === 0) {
+                    ordersList.innerHTML = '<tr><td colspan="6" class="no-orders">No orders yet!</td></tr>';
+                } else {
+                    ordersList.innerHTML = orders.map(order => {
+                        const itemsList = order.items.map(i => `${i.name} (${i.quantity})`).join(', ');
+                        const statusClass = order.status === 'Completed' ? 'status-completed' : 'status-pending';
+                        const btnHtml = order.status !== 'Completed' 
+                            ? `<button class="complete-btn" onclick="completeOrder('${order._id}')">✓ Complete</button>` 
+                            : '<span style="color: var(--success); font-weight: 600;">✓ Done</span>';
+                        
+                        if (order.status === 'Pending') pending++;
+                        else completed++;
+                        revenue += order.total;
+                        
+                        return `
+                            <tr>
+                                <td>#${order._id.substring(order._id.length - 6)}</td>
+                                <td class="table-number-cell">🍽️ Table ${order.tableNumber}</td>
+                                <td>${itemsList}</td>
+                                <td>₹${order.total}</td>
+                                <td><span class="status-badge ${statusClass}">${order.status}</span></td>
+                                <td>${btnHtml}</td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+                
+                document.getElementById('total-orders').textContent = orders.length;
+                pendingOrders.textContent = pending;
+                completedOrders.textContent = completed;
+                totalRevenue.textContent = `₹${revenue}`;
+                
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                document.getElementById('orders-list').innerHTML = 
+                    '<tr><td colspan="6" class="no-orders" style="color: var(--danger);">Error loading orders. Make sure server is running!</td></tr>';
+            }
+        }
+        
+        async function completeOrder(orderId) {
+            try {
+                await fetch(`${API_URL}/order/${orderId}`, { method: 'PUT' });
+                loadOrders();
+            } catch (error) {
+                console.error('Error completing order:', error);
+            }
+        }
+
+        async function exportOrdersToCSV() {
+            try {
+                const response = await fetch(`${API_URL}/order`);
+                const orders = await response.json();
+
+                if (orders.length === 0) {
+                    alert('No orders to export!');
+                    return;
+                }
+
+                let csvContent = 'Order ID,Table,Items,Total,Status,Date\n';
+
+                orders.forEach(order => {
+                    const orderId = order._id.substring(order._id.length - 6);
+                    const tableNumber = order.tableNumber;
+                    const itemsList = order.items.map(i => `${i.name} (${i.quantity})`).join(', ');
+                    const total = order.total;
+                    const status = order.status;
+                    const date = new Date(order.date).toLocaleString();
+                    const escapedItems = `"${itemsList.replace(/"/g, '""')}"`;
+
+                    csvContent += `${orderId},Table ${tableNumber},${escapedItems},₹${total},${status},${date}\n`;
+                });
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+
+                link.setAttribute('href', url);
+                link.setAttribute('download', `orders_export_${new Date().toISOString().slice(0, 10)}.csv`);
+                link.style.visibility = 'hidden';
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                alert(`Exported ${orders.length} orders to CSV!`);
+            } catch (error) {
+                console.error('Error exporting orders:', error);
+                alert('Error exporting orders. Make sure server is running!');
+            }
+        }
+        
+        document.getElementById('add-menu-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const newItem = {
+                name: document.getElementById('menu-name').value,
+                price: parseInt(document.getElementById('menu-price').value),
+                category: document.getElementById('menu-category').value,
+                image: document.getElementById('menu-image').value || 'https://via.placeholder.com/200x200?text=Ice+Cream'
+            };
+            
+            try {
+                await fetch(`${API_URL}/menu`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newItem)
+                });
+                
+                alert('Menu item added successfully!');
+                e.target.reset();
+                loadMenu();
+            } catch (error) {
+                console.error('Error adding menu item:', error);
+                alert('Error adding item. Make sure server is running!');
+            }
+        });
+        
+        async function loadMenu() {
+            try {
+                const response = await fetch(`${API_URL}/menu`);
+                const menu = await response.json();
+                
+                const menuList = document.getElementById('menu-list');
+                
+                if (menu.length === 0) {
+                    menuList.innerHTML = '<p class="no-orders">No menu items yet!</p>';
+                } else {
+                    menuList.innerHTML = menu.map(item => `
+                        <div class="menu-item-admin">
+                            <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/80'">
+                            <div class="menu-item-info">
+                                <h4>${item.name}</h4>
+                                <span>${item.category} - ₹${item.price}</span>
+                            </div>
+                            <button class="delete-btn" onclick="deleteMenuItem('${item._id}')">🗑️</button>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading menu:', error);
+                document.getElementById('menu-list').innerHTML = 
+                    '<p class="no-orders" style="color: var(--danger);">Error loading menu. Make sure server is running!</p>';
+            }
+        }
+        
+        async function deleteMenuItem(itemId) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                try {
+                    await fetch(`${API_URL}/menu/${itemId}`, { method: 'DELETE' });
+                    loadMenu();
+                } catch (error) {
+                    console.error('Error deleting item:', error);
+                }
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOrders();
+            loadMenu();
+        });
+    </script>
+</body>
+</html>
+

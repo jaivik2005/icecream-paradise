@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍦 Ice Cream Paradise - Kitchen</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🍦 Ice Cream Paradise</h1>
+            <p class="tagline">Kitchen Dashboard</p>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">📋 Menu</a>
+        </nav>
+    </header>
+
+    <div class="kitchen-container">
+        <div class="kitchen-header">
+            <h1>Kitchen Orders</h1>
+            <p>Manage incoming orders with style</p>
+        </div>
+
+        <button class="refresh-btn" onclick="loadOrders()">
+            🔄 Refresh Orders
+        </button>
+
+        <div class="orders-grid" id="orders-grid">
+            <div class="no-orders">Loading orders...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000';
+
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_URL}/order`);
+                const orders = await response.json();
+
+                const ordersGrid = document.getElementById('orders-grid');
+
+                if (orders.length === 0) {
+                    ordersGrid.innerHTML = '<div class="no-orders">No orders yet! 🍦</div>';
+                    return;
+                }
+
+                ordersGrid.innerHTML = orders.map(order => {
+                    const itemsList = order.items.map(item =>
+                        `<div class="order-item">
+                            <span>${item.name}</span>
+                            <span>x${item.quantity}</span>
+                        </div>`
+                    ).join('');
+
+                    const statusClass = order.status === 'Completed' ? 'completed' : 'pending';
+                    const btnHtml = order.status !== 'Completed'
+                        ? `<button class="complete-btn" onclick="completeOrder('${order._id}')">✅ Mark as Completed</button>`
+                        : '<div style="text-align: center; color: var(--success); font-weight: bold; padding: 15px; background: rgba(0, 255, 136, 0.1); border-radius: 12px; border: 1px solid var(--success);">✓ Order Completed</div>';
+
+                    return `
+                        <div class="order-card ${statusClass}">
+                            <div class="order-header">
+                                <div class="order-info">
+                                    <div class="order-id">#${order._id.substring(order._id.length - 6)}</div>
+                                    <div class="table-badge">🍽️ Table ${order.tableNumber}</div>
+                                </div>
+                                <div class="order-status ${order.status === 'Completed' ? 'status-completed' : 'status-pending'}">${order.status}</div>
+                            </div>
+                            <div class="order-items">
+                                ${itemsList}
+                            </div>
+                            <div class="order-total">Total: ₹${order.total}</div>
+                            ${btnHtml}
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                document.getElementById('orders-grid').innerHTML =
+                    '<div class="no-orders" style="color: var(--danger);">Error loading orders. Make sure server is running!</div>';
+            }
+        }
+
+        async function completeOrder(orderId) {
+            try {
+                await fetch(`${API_URL}/order/${orderId}`, { method: 'PUT' });
+                loadOrders();
+            } catch (error) {
+                console.error('Error completing order:', error);
+                alert('Error completing order. Please try again!');
+            }
+        }
+
+        setInterval(loadOrders, 30000);
+        document.addEventListener('DOMContentLoaded', loadOrders);
+    </script>
+</body>
+</html>
+

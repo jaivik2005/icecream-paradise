@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍦 Ice Cream Paradise - Menu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🍦 Ice Cream Paradise</h1>
+            <p class="tagline">Handcrafted with Love</p>
+        </div>
+        <div class="cart-icon" onclick="toggleCart()">
+            🛒 Cart <span id="cart-count">0</span>
+        </div>
+    </header>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2>🛒 Your Cart</h2>
+            <button class="close-cart" onclick="toggleCart()">✕</button>
+        </div>
+        
+        <!-- Table Selection -->
+        <div class="table-selection">
+            <label for="table-select">🍽️ Select Table:</label>
+            <select id="table-select" onchange="updateSelectedTable()">
+                <option value="1">Table 1</option>
+                <option value="2">Table 2</option>
+                <option value="3">Table 3</option>
+                <option value="4">Table 4</option>
+                <option value="5">Table 5</option>
+            </select>
+        </div>
+        
+        <div class="cart-items" id="cart-items">
+            <p class="empty-cart">Your cart is empty!</p>
+        </div>
+        <div class="cart-footer">
+            <div class="total">
+                <span>Total:</span>
+                <span id="cart-total">₹0</span>
+            </div>
+            <button class="order-btn" onclick="placeOrder()">Place Order</button>
+        </div>
+    </div>
+
+    <!-- Classic Ice Creams Section -->
+    <section class="menu-section" id="classic">
+        <h2>🍦 Classic Ice Creams</h2>
+        <div class="menu-grid">
+            <div class="menu-card">
+                <img src="https://www.davidlebovitz.com/wp-content/uploads/2009/02/Vanilla-ice-cream-recipe-cherry-compote-4.jpg" alt="Vanilla Ice Cream">
+                <div class="card-content">
+                    <h3>Vanilla</h3>
+                    <p>Classic creamy vanilla bean ice cream</p>
+                    <div class="price-row">
+                        <span class="price">₹60</span>
+                        <button onclick="addToCart('Vanilla', 60)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://www.cravethegood.com/wp-content/uploads/2021/04/sous-vide-chocolate-ice-cream-15-683x1024.jpg" alt="Chocolate Ice Cream">
+                <div class="card-content">
+                    <h3>Chocolate</h3>
+                    <p>Rich and decadant chocolate delight</p>
+                    <div class="price-row">
+                        <span class="price">₹70</span>
+                        <button onclick="addToCart('Chocolate', 70)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://simpledesserts.com/wp-content/uploads/2023/05/fresh-strawberry-ice-cream-thumbnail.jpg" alt="Strawberry Ice Cream">
+                <div class="card-content">
+                    <h3>Strawberry</h3>
+                    <p>Fresh strawberry with real fruit pieces</p>
+                    <div class="price-row">
+                        <span class="price">₹70</span>
+                        <button onclick="addToCart('Strawberry', 70)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://www.cookwithmanali.com/wp-content/uploads/2014/11/Indian-Butterscotch-Ice-Cream-No-Churn-500x500.jpg" alt="Butterscotch Ice Cream">
+                <div class="card-content">
+                    <h3>Butterscotch</h3>
+                    <p>Caramelized butter scotch nuts delight</p>
+                    <div class="price-row">
+                        <span class="price">₹80</span>
+                        <button onclick="addToCart('Butterscotch', 80)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://culinaryshades.com/wp-content/uploads/2022/03/mango-ice-cream-sqr01.jpg" alt="Mango Ice Cream">
+                <div class="card-content">
+                    <h3>Mango</h3>
+                    <p>King of fruits - Alphonso mango magic</p>
+                    <div class="price-row">
+                        <span class="price">₹80</span>
+                        <button onclick="addToCart('Mango', 80)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sundaes Section -->
+    <section class="menu-section" id="sundaes">
+        <h2>🍨 Sundaes</h2>
+        <div class="menu-grid">
+            <div class="menu-card">
+                <img src="https://www.keep-calm-and-eat-ice-cream.com/wp-content/uploads/2020/10/Chocolate-sundae-square.png" alt="Chocolate Sundae">
+                <div class="card-content">
+                    <h3>Chocolate Sundae</h3>
+                    <p>Chocolate ice cream with chocolate sauce & sprinkles</p>
+                    <div class="price-row">
+                        <span class="price">₹120</span>
+                        <button onclick="addToCart('Chocolate Sundae', 120)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://nibbleanddine.com/wp-content/uploads/2021/08/Strawberry-Sundaes-FI.jpg" alt="Strawberry Sundae">
+                <div class="card-content">
+                    <h3>Strawberry Sundae</h3>
+                    <p>Strawberry delight with strawberry sauce</p>
+                    <div class="price-row">
+                        <span class="price">₹120</span>
+                        <button onclick="addToCart('Strawberry Sundae', 120)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://icecreamfromscratch.com/wp-content/uploads/2022/07/Brownie-Sundae-1.2-735x1103.jpg" alt="Brownie Sundae">
+                <div class="card-content">
+                    <h3>Brownie Sundae</h3>
+                    <p>Warm brownie with vanilla ice cream & chocolate</p>
+                    <div class="price-row">
+                        <span class="price">₹150</span>
+                        <button onclick="addToCart('Brownie Sundae', 150)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://icecreamfromscratch.com/wp-content/uploads/2022/09/Caramel-Sundae-1.2-735x1103.jpg" alt="Caramel Sundae">
+                <div class="card-content">
+                    <h3>Caramel Sundae</h3>
+                    <p>Creamy caramel with nuts & caramel drizzle</p>
+                    <div class="price-row">
+                        <span class="price">₹130</span>
+                        <button onclick="addToCart('Caramel Sundae', 130)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kulfi Section -->
+    <section class="menu-section" id="kulfi">
+        <h2>🍧 Kulfi</h2>
+        <div class="menu-grid">
+            <div class="menu-card">
+                <img src="https://www.cookwithmanali.com/wp-content/uploads/2016/04/Malai-Kulfi-Recipe.jpg" alt="Malai Kulfi">
+                <div class="card-content">
+                    <h3>Malai Kulfi</h3>
+                    <p>Traditional creamy Indian frozen dessert</p>
+                    <div class="price-row">
+                        <span class="price">₹60</span>
+                        <button onclick="addToCart('Malai Kulfi', 60)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://kannanskitchen.com/wp-content/uploads/2021/04/DSC_4658.jpg" alt="Kesar Pista Kulfi">
+                <div class="card-content">
+                    <h3>Kesar Pista Kulfi</h3>
+                    <p>Saffron & pistachio flavored kulfi</p>
+                    <div class="price-row">
+                        <span class="price">₹80</span>
+                        <button onclick="addToCart('Kesar Pista Kulfi', 80)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://thespicemess.com/wp-content/uploads/2021/06/Mango-Kulfi-12-1.jpg" alt="Mango Kulfi">
+                <div class="card-content">
+                    <h3>Mango Kulfi</h3>
+                    <p>Real mango pulp kulfi - seasonal favorite</p>
+                    <div class="price-row">
+                        <span class="price">₹70</span>
+                        <button onclick="addToCart('Mango Kulfi', 70)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ice Cream Cones Section -->
+    <section class="menu-section" id="cones">
+        <h2>🍦 Ice Cream Cones</h2>
+        <div class="menu-grid">
+            <div class="menu-card">
+                <img src="https://s7d1.scene7.com/is/image/mcdonaldsstage/DC_202106_0336_LargeVanillaCone_1564x1564%3Aproduct-header-mobile?dpr=off&hei=1313&wid=1313" alt="Vanilla Cone">
+                <div class="card-content">
+                    <h3>Vanilla Cone</h3>
+                    <p>Crispy waffle cone with vanilla scoop</p>
+                    <div class="price-row">
+                        <span class="price">₹50</span>
+                        <button onclick="addToCart('Vanilla Cone', 50)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://pudgefactor.com/wp-content/uploads/2021/06/Featured-Triple-Chocolate-Ice-Cream1.jpg" alt="Chocolate Cone">
+                <div class="card-content">
+                    <h3>Chocolate Cone</h3>
+                    <p>Crispy waffle cone with chocolate scoop</p>
+                    <div class="price-row">
+                        <span class="price">₹60</span>
+                        <button onclick="addToCart('Chocolate Cone', 60)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://www.elmundoeats.com/wp-content/uploads/2024/07/Strawberry-ice-cream-in-a-cone.jpg" alt="Strawberry Cone">
+                <div class="card-content">
+                    <h3>Strawberry Cone</h3>
+                    <p>Crispy waffle cone with strawberry scoop</p>
+                    <div class="price-row">
+                        <span class="price">₹60</span>
+                        <button onclick="addToCart('Strawberry Cone', 60)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Ice Creams Section -->
+    <section class="menu-section" id="special">
+        <h2>🍫 Special Ice Creams</h2>
+        <div class="menu-grid">
+            <div class="menu-card">
+                <img src="https://www.twistandmake.com/hs-fs/hubfs/twist-and-make-images/New-Twist-and-Make-Recipes/640-Images/56-oreo-ice-cream-sandwich.jpg?height=640&name=56-oreo-ice-cream-sandwich.jpg&width=640" alt="Oreo Ice Cream">
+                <div class="card-content">
+                    <h3>Oreo Ice Cream</h3>
+                    <p>Crushed oreo cookies in vanilla base</p>
+                    <div class="price-row">
+                        <span class="price">₹100</span>
+                        <button onclick="addToCart('Oreo Ice Cream', 100)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://target.scene7.com/is/image/Target/GUEST_bf92cc6a-d5c6-4671-bff8-a3f9dacd143a" alt="KitKat Ice Cream">
+                <div class="card-content">
+                    <h3>KitKat Ice Cream</h3>
+                    <p>KitKat pieces in chocolate ice cream</p>
+                    <div class="price-row">
+                        <span class="price">₹110</span>
+                        <button onclick="addToCart('KitKat Ice Cream', 110)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://goodthingsbaking.com/wp-content/uploads/2023/05/black-forest-ice-cream-7.jpg" alt="Black Forest">
+                <div class="card-content">
+                    <h3>Black Forest</h3>
+                    <p>Cherry & chocolate with cherry syrup</p>
+                    <div class="price-row">
+                        <span class="price">₹120</span>
+                        <button onclick="addToCart('Black Forest', 120)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://apumpkinandaprincess.com/wp-content/uploads/2022/08/easy-chocolate-chip-ice-cream-recipe.jpg" alt="Chocolate Chips">
+                <div class="card-content">
+                    <h3>Chocolate Chips</h3>
+                    <p>Vanilla ice cream with chocolate chips</p>
+                    <div class="price-row">
+                        <span class="price">₹90</span>
+                        <button onclick="addToCart('Chocolate Chips', 90)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ice Cream Shakes Section -->
+    <section class="menu-section" id="shakes">
+        <h2>🧊 Ice Cream Shakes</h2>
+        <div class="menu-grid">
+            <div class="menu-card">
+                <img src="https://cookilicious.com/wp-content/uploads/2025/01/Brownie-Milkshake-Recipe-20-scaled.jpg" alt="Chocolate Shake">
+                <div class="card-content">
+                    <h3>Chocolate Shake</h3>
+                    <p>Thick chocolate shake with chocolate ice cream</p>
+                    <div class="price-row">
+                        <span class="price">₹90</span>
+                        <button onclick="addToCart('Chocolate Shake', 90)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://www.foodandwine.com/thmb/aYv9IwIyM4EKLL0o7W1CUSfjXzU%3D/1500x0/filters%3Ano_upscale%28%29%3Amax_bytes%28150000%29%3Astrip_icc%28%29/Vanilla-Milkshake-FT-MAG-RECIPE-0325-4ad53abc27a74f7687e510cc17d28d1d.jpg" alt="Vanilla Shake">
+                <div class="card-content">
+                    <h3>Vanilla Shake</h3>
+                    <p>Creamy vanilla shake - timeless classic</p>
+                    <div class="price-row">
+                        <span class="price">₹80</span>
+                        <button onclick="addToCart('Vanilla Shake', 80)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://www.oliviascuisine.com/wp-content/uploads/2021/06/strawberry-milkshake.jpg" alt="Strawberry Shake">
+                <div class="card-content">
+                    <h3>Strawberry Shake</h3>
+                    <p>Fresh strawberry with vanilla ice cream</p>
+                    <div class="price-row">
+                        <span class="price">₹90</span>
+                        <button onclick="addToCart('Strawberry Shake', 90)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="https://saltandbaker.com/wp-content/uploads/2020/12/oreo-milkshake-recipe.jpg" alt="Oreo Shake">
+                <div class="card-content">
+                    <h3>Oreo Shake</h3>
+                    <p>Crushed oreo cookies in vanilla shake</p>
+                    <div class="price-row">
+                        <span class="price">₹110</span>
+                        <button onclick="addToCart('Oreo Shake', 110)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Cart Button for Mobile -->
+    <button class="floating-cart" id="floating-cart" onclick="toggleCart()">
+        🛒 <span id="floating-count">0</span>
+    </button>
+
+    <!-- Order Success Modal -->
+    <div class="modal" id="order-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">✕</span>
+            <div class="success-icon">✅</div>
+            <h2>Order Placed Successfully!</h2>
+            <p>Thank you for your order. We'll prepare it with love!</p>
+            <p class="order-number">Order #<span id="order-number"></span></p>
+            <p class="order-table">🍽️ <span id="order-table"></span></p>
+            <button onclick="closeModal()">Continue Shopping</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>🍦 Ice Cream Paradise | Made with Love</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
