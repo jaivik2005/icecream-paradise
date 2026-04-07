@@ -13,8 +13,8 @@ const OrderSchema = new mongoose.Schema({
     price: Number
   }],
   total: Number,
-  status: { type: String, default: "Pending" },
-  date: { type: Date, default: Date.now }
+  status: { type: String, default: "Pending", index: true },
+  date: { type: Date, default: Date.now, index: true }
 });
 
 module.exports = mongoose.model("Order", OrderSchema);

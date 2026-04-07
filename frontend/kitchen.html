@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🍦 Ice Cream Paradise - Kitchen</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
@@ -33,7 +33,7 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost:3000';
+        const API_URL = '';
 
         async function loadOrders() {
             try {
@@ -47,7 +47,7 @@
                     return;
                 }
 
-                ordersGrid.innerHTML = orders.map(order => {
+                const newHtml = orders.map(order => {
                     const itemsList = order.items.map(item =>
                         `<div class="order-item">
                             <span>${item.name}</span>
@@ -78,24 +78,34 @@
                     `;
                 }).join('');
 
+                // No UI Flicker check: ONLY update DOM if there's actually a change!
+                if (ordersGrid.innerHTML !== newHtml) {
+                    ordersGrid.innerHTML = newHtml;
+                }
+
             } catch (error) {
                 console.error('Error loading orders:', error);
-                document.getElementById('orders-grid').innerHTML =
-                    '<div class="no-orders" style="color: var(--danger);">Error loading orders. Make sure server is running!</div>';
+                
+                // Also prevent flicker on error state
+                const errorHtml = '<div class="no-orders" style="color: var(--danger);">Error loading orders. Make sure server is running!</div>';
+                if (document.getElementById('orders-grid').innerHTML !== errorHtml) {
+                    document.getElementById('orders-grid').innerHTML = errorHtml;
+                }
             }
         }
 
         async function completeOrder(orderId) {
             try {
                 await fetch(`${API_URL}/order/${orderId}`, { method: 'PUT' });
-                loadOrders();
+                loadOrders(); // Instant refresh locally right post-action
             } catch (error) {
                 console.error('Error completing order:', error);
                 alert('Error completing order. Please try again!');
             }
         }
 
-        setInterval(loadOrders, 30000);
+        // Auto Refresh Logic (Polling) - Fetch every 3 seconds silently
+        setInterval(loadOrders, 3000);
         document.addEventListener('DOMContentLoaded', loadOrders);
     </script>
 </body>

@@ -134,6 +134,9 @@ document.addEventListener('click', function(event) {
     const cartIcon = document.querySelector('.cart-icon');
     const floatingCart = document.getElementById('floating-cart');
     
+    // Fix: If the target was removed from the DOM (like quantity buttons updating innerHTML), do not close
+    if (!document.body.contains(event.target)) return;
+    
     if (cartSidebar.classList.contains('active') &&
         !cartSidebar.contains(event.target) &&
         !cartIcon.contains(event.target) &&

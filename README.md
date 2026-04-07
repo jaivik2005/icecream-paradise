@@ -1,183 +1,72 @@
+# 🍦 Ice Cream Paradise
 
-# 🍦 Ice Cream Ordering & Management System
-
-A modern **QR-based Ice Cream Ordering System** designed for restaurants and ice cream parlors.  
-Customers can scan a QR code, view the menu, and place orders digitally.  
-Orders are sent directly to the kitchen screen, reducing manual work and errors.
-
-This project is ideal for **college submission**, **software engineering projects**, and **real-world use**.
-
----
-
-## 📌 Project Overview
-
-Traditional ordering systems are slow and error-prone.  
-This system replaces paper menus and manual order-taking with a **digital, fast, and efficient solution**.
-
-### Who uses the system?
-- 👨‍🍳 Kitchen Staff
-- 🧑‍💼 Admin / Manager
-- 🧑‍🤝‍🧑 Customers
-- 🧑‍🍽️ Waiter (optional)
+**Ice Cream Paradise** is a full-stack, real-time web application to streamline orders for an ice cream parlor. It provides a simple, beautiful interface for customers to browse the menu and order, while providing staff with live-updating dashboards for order management.
 
 ---
 
 ## 🚀 Features
 
-### 👥 Customer Side
-- Scan QR code to open menu
-- View ice cream items with images & prices
-- Add items to cart
-- Place order easily
-- No login required
-
-### 🧑‍🍳 Kitchen Side
-- Live order display screen
-- Sound alert 🔔 for new orders
-- Order status:
-  - Pending
-  - Preparing
-  - Completed
-- Time taken per order tracking
-
-### 🧑‍💼 Admin Panel
-- Add / update / delete menu items
-- Manage prices and availability
-- View daily sales report
-- View completed & pending orders
-- Dashboard with statistics
-
-### ⚙️ Extra Advanced Features
-- Offline LAN mode (works without internet)
-- Mobile-friendly UI
-- Dark / Light theme
-- Kitchen display screen
-- Daily & monthly sales report
+* **Customer Interface (`index.html`):** Beautiful, fully responsive ice cream menu with a dynamically calculating sliding cart.
+* **Kitchen Dashboard (`kitchen.html`):** Live-updating layout displaying incoming orders instantaneously as they are placed by the customers. Includes a one-click completion button.
+* **Admin Panel (`admin.html`):** Includes comprehensive stats tracking (Total Orders, Pending, Revenue) and full CRUD capabilities to add or remove items from the live database menu.
+* **Real-Time Data Sync:** Dashboards automatically fetch the latest menu and order data silently to prevent any UI flickering or disruptive page reloads.
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ Technologies Used
 
-### Frontend
-- HTML5
-- CSS3
-- JavaScript
-- Responsive Design
-
-### Backend
-- Node.js
-- Express.js
-
-### Database
-- MongoDB
-
-### Other Tools
-- QR Code Generator
-- REST APIs
-- Local Network (LAN) Support
+* **Frontend:** HTML5, Modern CSS3 variables, Vanilla ES6 JavaScript (No heavy frameworks — pure, optimized performance).
+* **Backend:** Node.js, Express.js (REST API architecture).
+* **Database:** MongoDB via Mongoose ORM.
 
 ---
 
-## 🧠 System Workflow
+## 📂 Architecture & Folder Structure
 
-1. Customer scans QR code
-2. Menu opens in browser
-3. Customer selects ice cream items
-4. Order is placed
-5. Kitchen screen receives order instantly
-6. Chef prepares the order
-7. Order marked as completed
-8. Admin can view sales & reports
+We follow industry-standard separation of concerns:
 
----
-
-## 🗂️ Database Design (ER Diagram Entities)
-
-- Customer
-- Order
-- Order Items
-- Menu
-- Admin
-- Kitchen
-
-Relationships:
-- One customer → many orders
-- One order → many items
-- Admin manages menu & reports
+```
+icecream-paradise/
+├── frontend/             # All client-side code
+│   ├── css/              # Stylesheets
+│   ├── js/               # Frontend logic and DOM handling
+│   ├── index.html        # Customer entry point
+│   ├── admin.html        # Admin Dashboard
+│   └── kitchen.html      # Kitchen Order Screen
+├── backend/              # All server-side code
+│   ├── models/           # Mongoose Database Schemas (Menu, Order)
+│   ├── routes/           # Express API Endpoints
+│   ├── server.js         # Core application setup
+│   └── db.js             # MongoDB connector
+├── package.json          # Dependency tracking
+└── README.md             # Project documentation
+```
 
 ---
 
-## 📊 Reports Generated
+## ⚙️ How to Run Locally
 
-- Daily sales report
-- Order-wise report
-- Time taken per order
-- Most sold ice cream items
+### Prerequisites
+* [Node.js](https://nodejs.org/en/) installed on your computer.
+* A live MongoDB connection URL. 
 
----
+### Instructions
 
-## 🧪 How to Run the Project
-
-### 1️⃣ Clone Repository
-```bash
-git clone https://github.com/your-username/ice-cream-ordering-system.git
-
-2️⃣ Install Dependencies
-
-cd backend
-npm install
-
-3️⃣ Start Server
-
-npm start
-
-4️⃣ Open Frontend
-	•	Open frontend/index.html for customer
-	•	Open admin.html for admin panel
-	•	Open kitchen.html for kitchen screen
-
-⸻
-
-🎓 Academic Use
-
-This project is suitable for:
-	•	Software Engineering
-	•	Web Development
-	•	DBMS Mini Project
-	•	Final Year / Semester Project
-
-Includes:
-	•	Real-life problem
-	•	ER Diagram
-	•	Modular architecture
-	•	Scalable design
-
-⸻
-
-🌟 Future Enhancements
-	•	Online payment integration
-	•	Customer order history
-	•	Role-based login
-	•	Mobile app version
-	•	AI-based demand prediction
-
-⸻
-
-👨‍💻 Developed By
-
-Prajapati Jaivik Vinodbhai
-B.E. Computer Engineering
-Web Development | Node.js | MongoDB
-
-⸻
-
-📜 License
-
-This project is for educational purposes.
-You are free to modify and improve it.
-
-⸻
-
-✨ Digital Ordering. Faster Service. Better Experience. 🍦
+1. **Clone the repository** (or download and unzip into a local folder).
+2. **Open the terminal** in the folder directory.
+3. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+4. **Start the server:**  
+   *(Ensure you supply your MongoDB URI)*
+   ```bash
+   MONGO_URI="mongodb://YOUR_MONGO_URL_HERE" npm run start
+   ```
+5. **Open your browser and navigate to:**
+   * `http://localhost:3000/` (Customer Side)
+   * `http://localhost:3000/admin.html` (Admin Panel)
 
 ---
+
+> Built with passion to deliver the best ice cream experience. 🍦
