@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍦 Ice Cream Paradise - Admin Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        .auth-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+        .auth-links {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        .auth-links a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🍦 Ice Cream Paradise</h1>
+            <p class="tagline">Admin Login</p>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">📋 Customer Menu</a>
+        </nav>
+    </header>
+
+    <div class="auth-container">
+        <h2>Admin Login</h2>
+        <div id="error-message" class="error-msg"></div>
+        <form id="login-form">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="email" required placeholder="admin@icecream.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" required placeholder="Enter your password">
+            </div>
+            <button type="submit" class="submit-btn" style="width: 100%; margin-top: 10px;">Login</button>
+        </form>
+        <div class="auth-links">
+            <p>Don't have an account? <a href="admin-signup.html">Sign Up</a></p>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '';
+
+        // Check if already logged in
+        if (localStorage.getItem('adminToken')) {
+            window.location.replace('admin.html');
+        }
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error-message');
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    errorDiv.textContent = data.error || 'Login failed';
+                    errorDiv.style.display = 'block';
+                } else {
+                    // Success
+                    localStorage.setItem('adminToken', data.token);
+                    localStorage.setItem('adminName', data.admin.name);
+                    window.location.replace('admin.html');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorDiv.textContent = 'Server error. Is the backend running?';
+                errorDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

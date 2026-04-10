@@ -1,5 +1,6 @@
 const express = require("express");
 const Menu = require("../models/Menu");
+const auth = require("../middleware/auth");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -12,7 +13,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     const item = new Menu(req.body);
     await item.save();
@@ -23,7 +24,20 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
+  try {
+    const updatedItem = await Menu.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedItem) {
+      return res.status(404).json({ error: "Menu item not found" });
+    }
+    res.json({ message: "Menu item updated successfully", item: updatedItem });
+  } catch (error) {
+    console.error("Error updating menu item:", error);
+    res.status(500).json({ error: "Failed to update menu item" });
+  }
+});
+
+router.delete("/:id", auth, async (req, res) => {
   try {
     const deletedItem = await Menu.findByIdAndDelete(req.params.id);
     if (!deletedItem) {

@@ -153,3 +153,55 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
+// Dynamic Menu Loading
+document.addEventListener('DOMContentLoaded', fetchAndRenderMenu);
+
+async function fetchAndRenderMenu() {
+    try {
+        const response = await fetch('/menu');
+        const menu = await response.json();
+        
+        // Map of category to DOM IDs
+        const categoryMap = {
+            "Classic": "classic",
+            "Sundaes": "sundaes",
+            "Kulfi": "kulfi",
+            "Cones": "cones",
+            "Special": "special",
+            "Shakes": "shakes"
+        };
+        
+        // Clear all grids just in case (though we did remove them from HTML)
+        Object.values(categoryMap).forEach(sectionId => {
+            const grid = document.querySelector(`#${sectionId} .menu-grid`);
+            if (grid) grid.innerHTML = '';
+        });
+
+        // Insert items into appropriate category sections
+        menu.forEach(item => {
+            const sectionId = categoryMap[item.category];
+            if (!sectionId) return; // Skip if unknown category for now
+            
+            const grid = document.querySelector(`#${sectionId} .menu-grid`);
+            if (grid) {
+                const card = document.createElement('div');
+                card.className = 'menu-card';
+                card.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/200x200?text=Ice+Cream'">
+                    <div class="card-content">
+                        <h3>${item.name}</h3>
+                        <p>${item.category} specific ice cream delight</p>
+                        <div class="price-row">
+                            <span class="price">₹${item.price}</span>
+                            <button onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching dynamic menu:', error);
+    }
+}
+

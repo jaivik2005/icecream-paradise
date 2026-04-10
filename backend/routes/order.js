@@ -1,5 +1,6 @@
 const express = require("express");
 const Order = require("../models/Order");
+const auth = require("../middleware/auth");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
@@ -25,7 +26,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   try {
     const updatedOrder = await Order.findByIdAndUpdate(req.params.id, { status: "Completed" }, { new: true });
     if (!updatedOrder) {
